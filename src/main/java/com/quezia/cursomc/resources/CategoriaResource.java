@@ -1,5 +1,7 @@
 package com.quezia.cursomc.resources;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,14 @@ public class CategoriaResource {
 		Categoria cat = serv.buscar(id);
 		
 		return ResponseEntity.ok().body(cat);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<?> findAll() {
+		
+		List<Categoria> lista = serv.buscarTodos();
+		
+		return ResponseEntity.ok().body(lista);
 	}
 
 }
