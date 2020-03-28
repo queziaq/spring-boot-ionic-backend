@@ -1,6 +1,5 @@
 package com.quezia.cursomc.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,22 +8,19 @@ import org.springframework.stereotype.Service;
 import com.quezia.cursomc.domain.Categoria;
 import com.quezia.cursomc.repositories.CategoriaRepository;
 
+import javassist.tools.rmi.ObjectNotFoundException;
+
 @Service
 public class CategoriaService {
 
 	@Autowired
 	private CategoriaRepository cr;
 	
-	public Categoria buscar(Integer id) {
+	public Categoria buscar(Integer id) throws ObjectNotFoundException {
 		Optional<Categoria> obj = cr.findById(id);
-		return obj.orElse(null); 
+		
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " 
+		+ id + ", Tipo: " + Categoria.class.getName()));
 	}
 	
-	public List<Categoria> buscarTodos(){
-		
-		List<Categoria> listCat = cr.findAll();
-		
-		return listCat;
-		
-	}
 }

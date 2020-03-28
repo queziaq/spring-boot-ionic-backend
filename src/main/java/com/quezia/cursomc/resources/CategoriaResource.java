@@ -1,6 +1,5 @@
 package com.quezia.cursomc.resources;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.quezia.cursomc.domain.Categoria;
 import com.quezia.cursomc.services.CategoriaService;
 
+import javassist.tools.rmi.ObjectNotFoundException;
+
 @RestController
 @RequestMapping(value="/categorias")
 public class CategoriaResource {
@@ -20,19 +21,11 @@ public class CategoriaResource {
 	private CategoriaService serv;
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	public ResponseEntity<?> findById(@PathVariable Integer id) {
+	public ResponseEntity<?> findById(@PathVariable Integer id) throws ObjectNotFoundException {
 		
 		Categoria cat = serv.buscar(id);
 		
 		return ResponseEntity.ok().body(cat);
-	}
-	
-	@RequestMapping(method=RequestMethod.GET)
-	public ResponseEntity<?> findAll() {
-		
-		List<Categoria> lista = serv.buscarTodos();
-		
-		return ResponseEntity.ok().body(lista);
 	}
 
 }
