@@ -3,6 +3,7 @@ package com.quezia.cursomc.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.quezia.cursomc.domain.Categoria;
@@ -31,6 +32,21 @@ public class CategoriaService {
 	public Categoria update(Categoria cat) throws ObjectNotFoundException{
 		buscar(cat.getId());
 		return cr.save(cat);
+	}
+	
+	public void deletar(Integer id) {
+		try {
+			buscar(id);
+		} catch (ObjectNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			cr.deleteById(id);
+		}catch(DataIntegrityViolationException ex){
+			throw new DataIntegrityExcpetion("Não é possível exluir um objeto associado a outro");
+		}
+		
 	}
 	
 }
