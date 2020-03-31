@@ -1,5 +1,6 @@
 package com.quezia.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,10 @@ public class CategoriaService {
 			throw new DataIntegrityExcpetion("Não é possível exluir um objeto associado a outro");
 		}
 		
+	}
+	
+	public List<Categoria> listarTudo(){
+		return cr.findAll();
 	}
 	
 }
