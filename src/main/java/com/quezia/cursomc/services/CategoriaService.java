@@ -23,4 +23,9 @@ public class CategoriaService {
 		+ id + ", Tipo: " + Categoria.class.getName()));
 	}
 	
+	public Categoria insert(Categoria cat){
+		cat.setId(null);
+		return cr.save(cat);
+	}
+	
 }
