@@ -28,4 +28,9 @@ public class CategoriaService {
 		return cr.save(cat);
 	}
 	
+	public Categoria update(Categoria cat) throws ObjectNotFoundException{
+		buscar(cat.getId());
+		return cr.save(cat);
+	}
+	
 }

@@ -39,5 +39,12 @@ public class CategoriaResource {
 				.path("/{id}").buildAndExpand(cat.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	public ResponseEntity<Void> Update(@RequestBody Categoria cat, @PathVariable Integer id) throws ObjectNotFoundException{
+		cat.setId(id);
+		cat = serv.update(cat);
+		return ResponseEntity.noContent().build();
+	}
 
 }
