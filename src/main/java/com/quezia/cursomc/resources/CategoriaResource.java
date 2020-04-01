@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -39,17 +41,19 @@ public class CategoriaResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Categoria cat){
-		cat = serv.insert(cat);
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO cat){
+		Categoria obj = serv.fromDTO(cat);
+		obj = serv.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(cat.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
-	public ResponseEntity<Void> Update(@RequestBody Categoria cat, @PathVariable Integer id) throws ObjectNotFoundException{
-		cat.setId(id);
-		cat = serv.update(cat);
+	public ResponseEntity<Void> Update(@Valid @RequestBody CategoriaDTO cat, @PathVariable Integer id) throws ObjectNotFoundException{
+		Categoria obj = serv.fromDTO(cat);
+		obj.setId(id);
+		obj = serv.update(obj);
 		return ResponseEntity.noContent().build();
 	}
 	
