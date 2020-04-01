@@ -8,32 +8,32 @@ public class CategoriaDTO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Integer Id;
-	private String Nome;
+	private Integer id;
+	private String nome;
 	
 	public CategoriaDTO(){
 		
 	}
 	
 	public CategoriaDTO(Categoria obj){
-		Id =obj.getId();
-		Nome = obj.getNome();
+		this.id =obj.getId();
+		this.nome = obj.getNome();
 	}
 
 	public Integer getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(Integer id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getNome() {
-		return Nome;
+		return this.nome;
 	}
 
 	public void setNome(String nome) {
-		Nome = nome;
+		this.nome = nome;
 	}
 	
 }
