@@ -35,8 +35,9 @@ public class CategoriaService {
 	}
 	
 	public Categoria update(Categoria cat) throws ObjectNotFoundException{
-		buscar(cat.getId());
-		return cr.save(cat);
+		Categoria catObj = buscar(cat.getId());
+		updateData(catObj, cat);
+		return cr.save(catObj);
 	}
 	
 	public void deletar(Integer id) {
@@ -63,8 +64,12 @@ public class CategoriaService {
 		return cr.findAll(pageRequest);
 	}
 	
-	public Categoria fromDTO(CategoriaDTO categoriaDTO) {
-		return new Categoria(categoriaDTO.getId(), categoriaDTO.getNome());
+	public Categoria fromDTO(CategoriaDTO cat) {
+		return new Categoria(cat.getId(),cat.getNome());
+	}
+	
+	private void updateData(Categoria catObj, Categoria obj) {
+		catObj.setNome(obj.getNome());
 	}
 	
 }
