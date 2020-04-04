@@ -21,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.quezia.cursomc.domain.Cliente;
 import com.quezia.cursomc.dto.ClienteDTO;
+import com.quezia.cursomc.dto.ClienteNewDTO;
 import com.quezia.cursomc.services.ClienteService;
 
 import javassist.tools.rmi.ObjectNotFoundException;
@@ -41,8 +42,8 @@ public class ClienteResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO cli){
-		Cliente obj = serv.fromDTO(cli);
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto){
+		Cliente obj = serv.fromDTO(objDto);
 		obj = serv.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
