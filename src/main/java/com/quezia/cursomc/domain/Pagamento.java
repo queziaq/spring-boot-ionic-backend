@@ -52,7 +52,7 @@ public abstract class Pagamento implements Serializable{
 	public void setEstado(EstadoPagamento estado) {
 		this.estado = estado.getCod();
 	}
-	@JsonIgnore
+
 	public Pedido getPedido() {
 		return pedido;
 	}
