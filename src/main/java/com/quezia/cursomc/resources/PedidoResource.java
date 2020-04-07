@@ -35,7 +35,7 @@ public class PedidoResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido ped){
+	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido ped) throws ObjectNotFoundException{
 		ped = serv.insert(ped);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(ped.getId()).toUri();
