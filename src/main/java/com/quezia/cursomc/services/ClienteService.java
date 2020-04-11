@@ -15,11 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.quezia.cursomc.domain.Cidade;
 import com.quezia.cursomc.domain.Cliente;
 import com.quezia.cursomc.domain.Endereco;
+import com.quezia.cursomc.domain.enums.Perfil;
 import com.quezia.cursomc.domain.enums.TipoCliente;
 import com.quezia.cursomc.dto.ClienteDTO;
 import com.quezia.cursomc.dto.ClienteNewDTO;
 import com.quezia.cursomc.repositories.ClienteRepository;
 import com.quezia.cursomc.repositories.EnderecoRepository;
+import com.quezia.cursomc.security.UserSS;
 
 import javassist.tools.rmi.ObjectNotFoundException;
 
@@ -34,6 +36,13 @@ public class ClienteService {
 	private EnderecoRepository er;
 	
 	public Cliente buscar(Integer id) throws ObjectNotFoundException {
+		
+		UserSS user = UserService.authenticated();
+		
+		if(user ==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationExcpetion("Acesso Negado");
+		}
+		
 		Optional<Cliente> obj = cr.findById(id);
 		
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " 
