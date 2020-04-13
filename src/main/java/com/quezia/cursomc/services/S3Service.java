@@ -45,7 +45,7 @@ public class S3Service {
 			log.info("upload Finalizado");
 			return s3client.getUrl(bucketName, fileName).toURI();
 		} catch (URISyntaxException e) {
-			throw new RuntimeException("Erro erro erro");
+			throw new FileException("Erro ao Converter URL para URI");
 		}
 	}
 
