@@ -1,17 +1,20 @@
 package com.quezia.cursomc.services;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
+
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 
 @Service
 public class S3Service {
@@ -23,19 +26,26 @@ public class S3Service {
 	@Value("${s3.bucket}")
 	private String bucketName;
 	
-	public void uploadFile(String localFilePath) {
+	public URI uploadFile(MultipartFile multiPartFile) throws IOException {
+
+		String fileName = multiPartFile.getOriginalFilename();
+		InputStream is = multiPartFile.getInputStream();
+		String contentType = multiPartFile.getContentType();
+
+		return uploadFile(is, fileName, contentType);
+					
+	}
+	
+	public URI uploadFile(InputStream is, String fileName, String contentType) {
 		try {
-			
-			File file = new File(localFilePath);
+			ObjectMetadata meta = new ObjectMetadata();
+			meta.setContentType(contentType);
 			log.info("Iniciando Upload");
-			s3client.putObject(new PutObjectRequest(bucketName, "teste.jpg", file));
+			s3client.putObject(bucketName, fileName, is, meta);
 			log.info("upload Finalizado");
-			
-		}catch(AmazonServiceException e) {
-			log.info("Error Code: "+e.getErrorCode());
-			log.info("Error Msg: "+e.getErrorMessage());		
-		}catch(AmazonClientException e) {
-			log.info("AMAZON CLIENT EXC "+e.getMessage());
+			return s3client.getUrl(bucketName, fileName).toURI();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException("Erro erro erro");
 		}
 	}
 

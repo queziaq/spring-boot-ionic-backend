@@ -1,6 +1,7 @@
 package com.quezia.cursomc.resources;
 
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.quezia.cursomc.domain.Cliente;
@@ -85,5 +87,12 @@ public class ClienteResource {
 		Page<ClienteDTO> cDTO = list.map(obj -> new ClienteDTO(obj));
 		return ResponseEntity.ok().body(cDTO);
 	}
-
+	
+	@RequestMapping(value="/picture", method=RequestMethod.POST)
+	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name="file") MultipartFile file) throws IOException{
+		
+		URI uri = serv.uploadProfilePicture(file);
+		return ResponseEntity.created(uri).build();
+		
+	}
 }
