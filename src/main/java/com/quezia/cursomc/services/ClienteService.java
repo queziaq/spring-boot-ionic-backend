@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.licensemanager.model.AuthorizationException;
 import com.quezia.cursomc.domain.Cidade;
 import com.quezia.cursomc.domain.Cliente;
 import com.quezia.cursomc.domain.Endereco;
@@ -118,7 +119,19 @@ public class ClienteService {
 		cliObj.setEmail(obj.getEmail());
 	}
 	
-	public URI uploadProfilePicture(MultipartFile multiPartFile) throws IOException {		
+	public URI uploadProfilePicture(MultipartFile multiPartFile) throws IOException {
+		UserSS user = UserService.authenticated();
+		
+		if(user == null)
+			throw new AuthorizationException("Acesso Negado");
+		
+		URI uri = s3.uploadFile(multiPartFile);
+		
+		Optional<Cliente> opEnt = cr.findById(user.getId());
+		Cliente cli = opEnt.get();
+		cli.setImage(uri.toString());
+		cr.save(cli);
+		
 		return s3.uploadFile(multiPartFile);
 	}
 }

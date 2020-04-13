@@ -34,6 +34,8 @@ public class Cliente implements Serializable{
 	private String cpfOuCnpj;
 	private Integer tipo;
 	
+	private String image;
+	
 	@JsonIgnore
 	private String senha;
 	
@@ -66,6 +68,7 @@ public class Cliente implements Serializable{
 		this.tipo = (tipo==null)? null : tipo.getCod();
 		this.senha = senha;
 		addPerfil(Perfil.CLIENTE);
+		this.image="";
 	}
 
 
@@ -149,6 +152,7 @@ public class Cliente implements Serializable{
 	public void setPedidos(List<Pedido> pedidos) {
 		this.pedidos = pedidos;
 	}
+	
 
 	@Override
 	public int hashCode() {
@@ -175,5 +179,12 @@ public class Cliente implements Serializable{
 		return true;
 	}
 
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 }
