@@ -1,11 +1,13 @@
 package com.quezia.cursomc.services;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +34,12 @@ import javassist.tools.rmi.ObjectNotFoundException;
 @Service
 public class ClienteService {
 
+	@Autowired
+	private ImageService ims;
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
+	@Value("${img.profile.size}")
+	private int size;
 	@Autowired
 	private BCryptPasswordEncoder ps;	
 	@Autowired
@@ -89,6 +97,23 @@ public class ClienteService {
 		return cr.findAll();
 	}
 	
+	public Cliente findByEmail(String email) throws ObjectNotFoundException {
+		
+		UserSS user = UserService.authenticated();
+		
+		if(user == null)
+			throw new AuthorizationException("Acesso Negado");
+		
+		Cliente obj = cr.findByEmail(email);
+		
+		if(obj == null) {
+			throw new 
+			ObjectNotFoundException("Objeto não encontrado ID: "+user.getId() +" Tipo: "+ Cliente.class.getName());
+		}
+		
+		return obj;
+	}
+	
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return cr.findAll(pageRequest);
@@ -125,13 +150,11 @@ public class ClienteService {
 		if(user == null)
 			throw new AuthorizationException("Acesso Negado");
 		
-		URI uri = s3.uploadFile(multiPartFile);
+		BufferedImage jpgImage = ims.getJpgImageFromFile(multiPartFile);
+		jpgImage = ims.cropSquare(jpgImage);
+		jpgImage = ims.resize(jpgImage, size);
+		String fileName = prefix + user.getId() +".jpg";
 		
-		Optional<Cliente> opEnt = cr.findById(user.getId());
-		Cliente cli = opEnt.get();
-		cli.setImage(uri.toString());
-		cr.save(cli);
-		
-		return s3.uploadFile(multiPartFile);
+		return s3.uploadFile(ims.getInputStream(jpgImage, "jpg"),fileName,"image");
 	}
 }

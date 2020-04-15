@@ -44,6 +44,14 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(cli);
 	}
 	
+	@RequestMapping(value="/email",method=RequestMethod.GET)
+	public ResponseEntity<?> findById(@RequestParam(value="value") String email) throws ObjectNotFoundException {
+		
+		Cliente cli = serv.findByEmail(email);
+		
+		return ResponseEntity.ok().body(cli);
+	}
+	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto){
 		Cliente obj = serv.fromDTO(objDto);
